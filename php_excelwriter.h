@@ -21,10 +21,15 @@
 #ifndef PHP_EXCELWRITER_H
 #define PHP_EXCELWRITER_H
 
+#include "xlsxwriter.h"
+
+#define EXCEL_COLUMN_TYPE_NUMBER 1<<0
+#define EXCEL_COLUMN_TYPE_STRING 1<<1
+
 extern zend_module_entry excelwriter_module_entry;
 #define phpext_excelwriter_ptr &excelwriter_module_entry
 
-#define PHP_EXCELWRITER_VERSION "0.1.0" /* Replace with version number for your extension */
+#define PHP_EXCELWRITER_VERSION "0.1.0"
 
 #ifdef PHP_WIN32
 #	define PHP_EXCELWRITER_API __declspec(dllexport)
@@ -38,28 +43,34 @@ extern zend_module_entry excelwriter_module_entry;
 #include "TSRM.h"
 #endif
 
-/*
-  	Declare any global variables you may need between the BEGIN
-	and END macros here:
-
-ZEND_BEGIN_MODULE_GLOBALS(excelwriter)
-	zend_long  global_value;
-	char *global_string;
-ZEND_END_MODULE_GLOBALS(excelwriter)
-*/
-
-/* Always refer to the globals in your function as EXCELWRITER_G(variable).
-   You are encouraged to rename these macros something shorter, see
-   examples in any other php module directory.
-*/
-#define EXCELWRITER_G(v) ZEND_MODULE_GLOBALS_ACCESSOR(excelwriter, v)
-
 #if defined(ZTS) && defined(COMPILE_DL_EXCELWRITER)
 ZEND_TSRMLS_CACHE_EXTERN()
 #endif
 
-#endif	/* PHP_EXCELWRITER_H */
+typedef struct _excel_book_object {
+    lxw_workbook *book;
+    zend_object std;
+} excel_book_object;
 
+static inline excel_book_object *php_excel_book_fetch_obj(zend_object *obj) {
+    return (excel_book_object *)((char*)(obj) - XtOffsetOf(excel_book_object, std));
+}
+
+#define Z_EXCEL_BOOK_P(zv) php_excel_book_fetch_obj(Z_OBJ_P((zv)))
+
+typedef struct _excel_sheet_object {
+    lxw_worksheet *sheet;
+    zval columns;
+    zend_object std;
+} excel_sheet_object;
+
+static inline excel_sheet_object *php_excel_sheet_fetch_obj(zend_object *obj) {
+    return (excel_sheet_object *)((char *)(obj) - XtOffsetOf(excel_sheet_object, std));
+}
+
+#define Z_EXCEL_SHEET_P(zv) php_excel_sheet_fetch_obj(Z_OBJ_P((zv)))
+
+#endif	/* PHP_EXCELWRITER_H */
 
 /*
  * Local variables:

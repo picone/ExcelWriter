@@ -10,7 +10,7 @@ set(SOURCE_FILES
 
 add_executable(excelwriter ${SOURCE_FILES})
 
-set(PHP_SOURCE /Users/ChienHo/Downloads/php-7.1.8)
+set(PHP_SOURCE /usr/local/include/php)
 
 INCLUDE_DIRECTORIES(${PHP_SOURCE}/main)
 INCLUDE_DIRECTORIES(${PHP_SOURCE}/Zend)
