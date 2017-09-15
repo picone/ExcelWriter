@@ -21,7 +21,7 @@
 #ifndef PHP_EXCELWRITER_H
 #define PHP_EXCELWRITER_H
 
-#include "xlsxwriter.h"
+#include "include/xlsxwriter.h"
 
 #define EXCEL_COLUMN_TYPE_NUMBER 1<<0
 #define EXCEL_COLUMN_TYPE_STRING 1<<1
